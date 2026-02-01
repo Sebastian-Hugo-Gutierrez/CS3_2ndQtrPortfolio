@@ -1,0 +1,80 @@
+
+<html>
+    <head>
+
+    </head>
+    <body onload="createTable()">
+        <h1>Sign Ups</h1>
+        <p>Filter by: </p>
+        <select id="filter" onchange="createTable()">
+            <option value="All">All</option>
+            <option value="Alianti">Alianti</option>
+            <option value="Bake Club">Bake Club</option>
+            <option value="Invictus">Invictus</option>
+            <option value="Math Club">Math Club</option>
+            <option value="SCA">SCA</option>
+            <option value="Likha">Likha</option>
+            <option value="Himig Agham">Himig Agham</option>
+        </select>
+        <table id="signups" border = "1">
+            
+        </table>
+            <p id="message" style="display: none"> There are no sign-ups </p>
+            <a href="Q3_2GNaGutierrez.html"> Sign-Up Page </a>
+    </body>
+
+    <script>
+        function createTable() {
+        const filter = document.getElementById("filter").value;
+            if(localStorage.length == 0) {
+                document.getElementById("signups").style.display = "none"
+                document.getElementById("message").style.display = "block"
+                return;
+            }
+
+            const data = []
+            const dataCategory = ["Student ID", "Full Name", "Birthday", "Email Address", "Mobile Phone", "Grade Level", "Intern/Extern", "Organization"];
+            let tableHTML = "<tr>";
+            for (const [key, value] of Object.entries(localStorage)) {
+                data.push(JSON.parse(value));
+            }
+
+            dataCategory.forEach((item) => {
+                tableHTML += `<th>${item}</th>`;
+            })
+
+            tableHTML += '</tr>'
+
+            if(filter == "All") {
+                data.forEach((item) => {
+                    tableHTML += "<tr>";
+                    Object.values(item).forEach((value) => {
+                        tableHTML += `<td>${value}</td>`;
+                    });
+                    tableHTML += "</tr>"
+                })
+            } else {
+                let count = 0;
+                data.forEach((item) => {
+                    if (item["orgo"] == filter) {
+                        tableHTML += "<tr>";
+                        Object.values(item).forEach((value) => {
+                        tableHTML += `<td>${value}</td>`;
+                        });
+                        tableHTML += "</tr>"
+                        count++;
+                    }
+                })
+                if (count == 0) {
+                    document.getElementById("signups").style.display = "none"
+                    document.getElementById("message").style.display = "block"
+                    return;
+                }
+            }
+
+            document.getElementById("signups").innerHTML = tableHTML;
+            document.getElementById("signups").style.display = "block"
+            document.getElementById("message").style.display = "none"
+        }
+        </script>
+</html>
