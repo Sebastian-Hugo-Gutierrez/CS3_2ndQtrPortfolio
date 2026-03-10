@@ -1,0 +1,94 @@
+<html>
+    <head>
+    <meta charset="UTF-8">
+    </head>
+    <style> 
+    input:focus {
+    background-color: grey;
+    }
+    </style>
+<body>
+<form id="form1">
+    <label for="stdId">Student ID:</label><br>
+    <input type="text" id="stdId" name="stdId" required><br>
+
+    <label for="fname">Full Name:</label><br>
+    <input type="text" id="fname" name="fname" required><br>
+
+    <label for="bDay">Birthday:</label><br>
+    <input type="date" id="bDay" name="bDay" required><br>
+
+    <label for="eAdd">Email Address:</label><br>
+    <input type="email" id="eAdd" name="eAdd" required><br>
+
+    <label for="mPhn">Mobile Phone:</label><br>
+    <input type="text" id="mPhn" name="mPhn" required><br>
+
+    <label for="gLvl">Grade Level:</label><br>
+    <select id ="gLvl" name="gLvl" required><br>
+
+    <option value="Grade-7">Grade-7</option>
+    <option value="Grade-8">Grade-8</option>
+    <option value="Grade-9">Grade-9</option>
+    <option value="Grade-10">Grade-10</option>
+    <option value="Grade-11">Grade-11</option>
+    <option value="Grade-12" >Grade-12</option>
+
+    <label for="intExt">Intern/Extern:</label><br>
+    <input type="radio" id="intern" name="intExt" value="intern" required>
+    <label for="intern">Intern</label><br>
+    <input type="radio" id="extern" name="intExt" value="extern" required>
+    <label for="extern">Extern</label><br>
+
+    <label for="orgo">Preferred Organization/Club:</label><br>
+    <select id="orgo" name="orgo" multiple required><br>
+
+    <option value="Alianti">Alianti</option>
+    <option value="Bake Club">Bake Club</option>
+    <option value="Invictus">Invictus</option>
+    <option value="Math Club">Math Club</option>
+    <option value="SCA">SCA</option>
+    <option value="Likha">Likha</option>
+    <option value="Himig Agham">Himig Agham</option>
+
+    <textarea name="message" rows="10" cols="20" onblur="blurFunction()">Why do you want to join?
+    </textarea><br>
+
+    <input type="submit" value="Submit"><br>
+    <input type="button" onreset="resetFunction()" value="Reset"><br>
+
+    <input type="button" value="View Sign Ups" onclick="document.location='viewSignUps.html'"> 
+</form>
+<script>
+function blurFunction() {
+    let x = document.getElementById("gLvl");
+    x.value = x.value.toUpperCase();
+}
+function submitFunction() {
+    alert("The form was submitted"); 
+}
+function resetFunction() {
+    alert("The form was reset");    
+}
+
+document.getElementById("form1").addEventListener("submit", function(event){
+    event.preventDefault();
+    
+    const data = {
+        stdId: document.getElementById("stdId").value,
+        fname: document.getElementById("fname").value,
+        bDay: document.getElementById("bDay").value,
+        eAdd: document.getElementById("eAdd").value,
+        mPhn: document.getElementById("mPhn").value,
+        gLvl: document.getElementById("gLvl").value,
+        intExt: document.querySelector('input[name="intExt"]:checked').value,
+        orgo: document.getElementById("orgo").value
+    };
+
+    localStorage.setItem(data["fname"], JSON.stringify(data));
+});
+    
+</script>
+
+</body>
+</html>
