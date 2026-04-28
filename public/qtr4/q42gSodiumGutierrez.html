@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie List App</title>
+<style>
+    :root {
+      --primary-blue: #007bff;
+      --bg-gray: #f8f9fa;
+      --border-color: #ddd;
+      --text-color: #333;
+  }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-gray);
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+      color: var(--text-color);
+  }
+
+   .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+  }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 24px;
+  }
+
+    .form-group {
+      margin-bottom: 15px;
+  }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+  }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 16px;
+  }
+
+    .star-rating {
+      display: flex;
+      gap: 5px;
+      font-size: 25px;
+      cursor: pointer;
+      margin-bottom: 20px;
+  }
+
+    .star {
+      color: #ccc;
+      transition: color 0.2s;
+  }
+
+    .star.selected, .star:hover, .star:hover ~ .star {
+      color: #ffcc00;
+  }
+
+    button {
+      width: 100%;
+      background-color: var(--primary-blue);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+  }
+
+    button:hover {
+      background-color: #0056b3;
+  }
+
+    hr {
+      margin: 30px 0;
+      border: 0;
+      border-top: 1px solid #eee;
+  }
+
+    .movie-item {
+      background: #fdfdfd;
+      border: 1px solid #eee;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      font-size: 15px;
+  }
+
+    .stars-display {
+      color: #ffcc00;
+  }
+  
+</style>
+</head>
+
+<body>
+<div class="container">
+  <h2>Add a Movie</h2>
+    
+  <div class="form-group">
+    <label>Title:</label>
+    <input type="text" id="movieTitle">
+  </div>
+
+  <div class="form-group">
+    <label>Year:</label>
+    <input type="number" id="movieYear">
+  </div>
+
+  <div class="form-group">
+    <label>Genre:</label>
+      <select id="movieGenre">
+        <option value="Action">Action </option>
+        <option value="Comedy">Comedy </option>
+        <option value="Drama">Drama </option>
+        <option value="Sci-Fi">Sci-Fi </option>
+      </select>
+  </div>
+
+  <label>Rating:</label>
+  <div class="star-rating" id="starRating">
+    <span class="star" data-value="1">★ </span>
+    <span class="star" data-value="2">★ </span>
+    <span class="star" data-value="3">★ </span>
+    <span class="star" data-value="4">★ </span>
+    <span class="star" data-value="5">★ </span>
+  </div>
+
+  <button id="addBtn">Add Movie</button>
+
+  <h2 style="margin-top: 40px;">Movie List</h2>
+  <div id="movieList"></div>
+</div>
+
+<script>
+  let currentRating = 0;
+  let moviesData = {}; 
+  const stars = document.querySelectorAll('.star');
+  const addBtn = document.getElementById('addBtn');
+  const movieListDiv = document.getElementById('movieList');
+
+  stars.forEach(star => {
+    star.addEventListener('click', (e) => {
+    currentRating = parseInt(e.target.getAttribute('data-value'));
+    updateStars();
+    });
+  });
+
+  function updateStars() {
+    stars.forEach(star => {
+    star.classList.toggle('selected', parseInt(star.getAttribute('data-value')) <= currentRating);
+  });
+  }
+
+  function renderList() {
+    movieListDiv.innerHTML = '';
+        
+    Object.keys(moviesData).forEach(title => {
+    const movie = moviesData[title];
+    const starIcons = '★'.repeat(movie.rating);
+
+    const movieItem = document.createElement('div');
+      movieItem.className = 'movie-item';
+      movieItem.innerHTML = `
+        <div class="movie-info">
+          <strong>${movie.title}</strong> (${movie.year}) - ${movie.genre}, 
+          Rating: <span class="stars-display">${starIcons}</span>
+        </div>
+        <button class="delete-btn" onclick="deleteMovie('${movie.title}')">Delete</button>
+        `;
+      movieListDiv.appendChild(movieItem);
+    });
+  }
+
+  addBtn.addEventListener('click', () => {
+    const title = document.getElementById('movieTitle').value.trim();
+    const year = document.getElementById('movieYear').value;
+    const genre = document.getElementById('movieGenre').value;
+    
+    if (!title || !year || currentRating === 0) {
+      alert("Please fill in all fields and provide a rating.");
+      return;
+    }
+
+    moviesData[title] = {
+      title: title,
+      year: year,
+      genre: genre,
+      rating: currentRating
+    };
+    renderList();
+
+    document.getElementById('movieTitle').value = '';
+    document.getElementById('movieYear').value = '';
+    currentRating = 0;
+    updateStars();
+      
+  });
+
+    window.deleteMovie = function(title) {
+      delete moviesData[title];
+      renderList();
+    };
+</script>
+
+</body>
+</html>
